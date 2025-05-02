@@ -34,3 +34,49 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+# Architecture
+
+```
+├── README.md
+├── next.config.js
+├── package.json
+├── tsconfig.json
+├── public/
+│   └── images/           # static Assets
+├── src/
+│   ├── app/              # (Next 13+) App-Router: Layouts, Seiten
+│   │   ├── layout.tsx
+│   │   ├── page.tsx      # Landing-Page
+│   │   └── game/         # optional: Unter-Route /game
+│   │       └── page.tsx
+│   ├── components/       # UI-elements
+│   │   ├── Game/
+│   │   │   ├── ImageDisplay.tsx
+│   │   │   ├── TagList.tsx
+│   │   │   └── Timer.tsx
+│   │   └── UI/
+│   │       ├── Button.tsx
+│   │       └── Card.tsx
+│   ├── context/          # React-Context / Provider
+│   │   └── GameProvider.tsx
+│   ├── hooks/            # Custom Hooks
+│   │   ├── useGame.ts
+│   │   └── useRule34Api.ts
+│   ├── lib/              # Infrastructure & Utilities
+│   │   ├── apiClient.ts  # fetch-Wrapper (e.g.SWR/React-Query?)
+│   │   └── gameEngine.ts # central game-Logic-class
+│   ├── services/         # Business-Logic / Feature-Module
+│   │   ├── modes/
+│   │   │   ├── ClassicMode.ts
+│   │   │   ├── TimeTrialMode.ts
+│   │   │   └── StepChallengeMode.ts
+│   │   └── navigation/
+│   │       └── TagNavigator.ts
+│   ├── store/            # Optional: Zustand, Redux Toolkit o.ä.
+│   │   └── gameStore.ts
+│   ├── types/            # TypeScript-Types & Interfaces
+│   │   └── index.d.ts
+│   └── styles/           # global CSS / Tailwind config
+│       └── globals.css
+```
