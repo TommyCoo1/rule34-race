@@ -1,5 +1,3 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
 ## Getting Started
 
 First, run the development server:
@@ -20,63 +18,49 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
 # Architecture
 
 ```
-├── README.md
-├── next.config.js
-├── package.json
-├── tsconfig.json
-├── public/
-│   └── images/           # static Assets
-├── src/
-│   ├── app/              # (Next 13+) App-Router: Layouts, Seiten
-│   │   ├── layout.tsx
-│   │   ├── page.tsx      # Landing-Page
-│   │   └── game/         # optional: Unter-Route /game
-│   │       └── page.tsx
-│   ├── components/       # UI-elements
-│   │   ├── Game/
-│   │   │   ├── ImageDisplay.tsx
-│   │   │   ├── TagList.tsx
-│   │   │   └── Timer.tsx
-│   │   └── UI/
-│   │       ├── Button.tsx
-│   │       └── Card.tsx
-│   ├── context/          # React-Context / Provider
-│   │   └── GameProvider.tsx
-│   ├── hooks/            # Custom Hooks
-│   │   ├── useGame.ts
-│   │   └── useRule34Api.ts
-│   ├── lib/              # Infrastructure & Utilities
-│   │   ├── apiClient.ts  # fetch-Wrapper (e.g.SWR/React-Query?)
-│   │   └── gameEngine.ts # central game-Logic-class
-│   ├── services/         # Business-Logic / Feature-Module
-│   │   ├── modes/
-│   │   │   ├── ClassicMode.ts
-│   │   │   ├── TimeTrialMode.ts
-│   │   │   └── StepChallengeMode.ts
-│   │   └── navigation/
-│   │       └── TagNavigator.ts
-│   ├── store/            # Optional: Zustand, Redux Toolkit o.ä.
-│   │   └── gameStore.ts
-│   ├── types/            # TypeScript-Types & Interfaces
-│   │   └── index.d.ts
-│   └── styles/           # global CSS / Tailwind config
-│       └── globals.css
+/rule34
+├─ next.config.js           # Next.js configuration
+├─ tailwind.config.ts         # Tailwind config in TypeScript (theme, colors, etc.)
+├─ tsconfig.json            # TypeScript settings
+├─ .env.local               # Environment variables (e.g. API keys)
+├─ public/
+│   ├─ favicon.ico          # Favicon
+│   └─ images/              # Static images and illustrations
+└─ src/
+   ├─ app/                  # **App Router** (Next 13+)
+   │   ├─ layout.tsx        # Root layout (HTML <head>, global UI)
+   │   ├─ globals.css       # Global styles (e.g. Tailwind base styles)
+   │   ├─ page.tsx          # Landing page / start screen
+   │   └─ api/              # Serverless API routes (App Router style)
+   │       └─ rule34/
+   │           └─ route.ts  # /api/rule34 → proxy to Rule34 API
+   ├─ components/           # Reusable UI components
+   │   ├─ Game/             # Game-specific components
+   │   │   ├─ ImageDisplay.tsx  # Shows the current image to guess
+   │   │   ├─ TagList.tsx       # Displays guessed tags
+   │   │   └─ Timer.tsx         # Countdown timer component
+   │   └─ UI/               # Generic, non-game-specific UI
+   │       ├─ Button.tsx    # Primary button component
+   │       └─ Card.tsx      # Card container component
+   ├─ hooks/                # Custom React hooks
+   │   ├─ useGame.ts        # Manages game state and navigation
+   │   └─ useRule34Api.ts   # Fetches data from Rule34 API, handles errors
+   ├─ lib/                  # Utility modules and low-level logic
+   │   ├─ apiClient.ts      # Fetch wrapper with caching and error logic
+   │   └─ gameEngine.ts     # Pure game logic (state machine, scoring)
+   ├─ context/              # React Context providers
+   │   └─ GameProvider.tsx  # Wraps app to provide game state via Context
+   ├─ services/             # Business-logic modules and feature code
+   │   └─ modes/            # Implements different game modes
+   │       ├─ Classic.ts    # Classic “one image” mode
+   │       └─ TimeTrial.ts  # Timed challenge mode
+   ├─ store/                # Optional global store (e.g. Zustand)
+   │   └─ gameStore.ts      # Shares state across non-React contexts
+   ├─ types/                # TypeScript interfaces & type definitions
+   │   └─ index.d.ts        # Centralized type declarations
+   └─ styles/               # Component-scoped or extra styles
+       └─ globals.css       # Tailwind or other global config
 ```
