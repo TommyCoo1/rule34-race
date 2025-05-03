@@ -2,12 +2,8 @@
 'use client'
 
 import { useState } from 'react'
+import type { Post } from '@/types'
 
-interface Post {
-  id: number
-  file_url: string
-  tags: string
-}
 
 interface Props {
   initialPost: Post
@@ -70,7 +66,7 @@ export default function ImageGame({ initialPost }: Props) {
                       padding: '6px 12px',
                       border: '1px solid #ccc',
                       borderRadius: 4,
-                      background: '#fafafa',
+                      background: '#1d2d44',
                       cursor: 'pointer',
                     }}
                   >
