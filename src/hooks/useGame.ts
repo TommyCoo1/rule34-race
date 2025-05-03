@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Post } from '@/types'
-import { fetchPostByTag } from './useRule34Api'
+import { fetchPostByTagViaProxy } from './useRule34Api'
 
 export function useGame(initialPost: Post) {
   const [post, setPost] = useState<Post>(initialPost)
@@ -11,7 +11,7 @@ export function useGame(initialPost: Post) {
     setLoading(true)
     setError(null)
     try {
-      const newPost = await fetchPostByTag(tag)
+      const newPost = await fetchPostByTagViaProxy(tag)
       setPost(newPost)
     } catch (e: any) {
       setError(e.message)
