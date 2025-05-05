@@ -29,7 +29,7 @@ export function applyTagSelection(
 ): GameState {
   // Loop-check: Post already seen?
   if (state.visitedPostIds.has(newPost.id)) {
-    return state
+    // return state
   }
 
   const hasReachedGoal = newPost.tags.includes(state.goalTag)

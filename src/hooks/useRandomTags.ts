@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 const mockTags = [
   'tentacles', 'catgirl', 'elf', 'maid', 'yuri', 'loli', 'futa', 'bondage',
-  'monster_girl', 'schoolgirl_uniform', 'latex', 'milf'
+  'monster_girl', 'school_uniform', 'latex', 'milf'
 ];
 
 // TODO maybe fetch via api new tags? or purely api call without static tags

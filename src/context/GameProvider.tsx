@@ -15,6 +15,8 @@ interface GameContextType {
   state: GameState | null;
   loading: boolean;
   error: string | null;
+  startTime: number;
+  endTime: number | null;
   selectTag: (tag: string) => void;
   goBack: () => void;
   pickFallbackPost: (post: Post) => void; // Add this line
@@ -43,6 +45,9 @@ export function GameProvider({
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [startTime] = useState(() => Date.now());
+  const [endTime, setEndTime] = useState<number | null>(null);
+
 
   const selectTag = useCallback(
     async (tag: string) => {
@@ -55,7 +60,10 @@ export function GameProvider({
         }
         if (state.visitedPostIds.has(newPost.id)) {
           toast.warning("Already visited – pick another tag");
-          return;
+          // return;
+        }
+        if (newPost.tags.includes(goalTag)) {
+          setEndTime(Date.now());
         }
         setState((prev) =>
           prev ? applyTagSelection(prev, newPost, tag) : prev
@@ -94,6 +102,8 @@ export function GameProvider({
         goBack,
         pickFallbackPost,
         closeDeadEnd,
+        startTime,
+        endTime,
       }}
     >
       {children}

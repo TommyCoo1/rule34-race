@@ -2,6 +2,7 @@ import { ArrowLeft, Flag } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGameContext } from "@/context/GameProvider";
 import { Button } from "@/components/UI/button";
+import GameTimer from "./GameTimer";
 
 export default function GameHeader() {
   const router = useRouter();
@@ -11,6 +12,12 @@ export default function GameHeader() {
 
   const { state, goBack } = useGameContext();
   const steps = state?.path.length ?? 0;
+
+  const handleSurrender = () => {
+    if (confirm("Are you sure you want to surrender and end this game?")) {
+      router.push("/"); // back to home page
+    }
+  };
 
   return (
     <header className="w-full max-w-4xl flex justify-between items-center border border-border bg-card p-4 rounded-xl shadow mb-6">
@@ -22,10 +29,12 @@ export default function GameHeader() {
         <div className="font-semibold text-sm text-muted-foreground">
           {start} → {end}
         </div>
-        <div className="text-xs text-muted-foreground">Steps: {steps}</div>
+        <div className="text-xs text-muted-foreground">
+          Steps: {steps} · <GameTimer />
+        </div>
       </div>
 
-      <Button variant="outline" className="flex items-center gap-1" disabled>
+      <Button variant="destructive" className="flex items-center gap-1" onClick={handleSurrender}>
         <Flag size={16} /> Surrender
       </Button>
     </header>

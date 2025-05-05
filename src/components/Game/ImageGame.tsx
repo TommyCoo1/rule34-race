@@ -1,11 +1,10 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
 import { useGameContext } from "@/context/GameProvider";
 import { DeadEndModal } from "./DeadEndModal";
 
 export default function ImageGame() {
-  const { state, loading, error, selectTag, goBack, pickFallbackPost, closeDeadEnd } =
+  const { state, loading, error, selectTag, pickFallbackPost, closeDeadEnd } =
     useGameContext();
 
   if (!state) return <p>No game state found.</p>;
@@ -16,14 +15,6 @@ export default function ImageGame() {
 
   return (
     <div className="max-w-xl mx-auto">
-      {history.length > 1 && (
-        <button
-          onClick={goBack}
-          className="mb-3 flex items-center gap-1 text-sm font-medium hover:bg-muted px-3 py-1 rounded-md"
-        >
-          <ArrowLeft size={16} /> Back
-        </button>
-      )}
       {loading && <p>Loading…</p>}
       {error && <p className="text-red-500">Error: {error}</p>}
       {!loading && !error && (
