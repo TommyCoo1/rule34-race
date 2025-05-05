@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useCallback } from "react"
 import { createInitialState, applyTagSelection, GameState } from "@/lib/gameState"
-import { fetchPostByTagViaProxy } from "@/hooks/useRule34Api"
+import { fetchRndPostByTagViaProxy } from "@/hooks/useRule34Api"
 import type { Post } from "@/types"
 
 interface GameContextType {
@@ -32,7 +32,7 @@ export function GameProvider({ children, initialPost, goalTag }: {
   const selectTag = useCallback(async (tag: string) => {
     setLoading(true)
     try {
-      const newPost = await fetchPostByTagViaProxy(tag)
+      const newPost = await fetchRndPostByTagViaProxy(tag)
       setState(prev => prev ? applyTagSelection(prev, newPost, tag) : prev)
     } catch (err) {
       setError("Could not load post, error:" + (err as Error).message)
