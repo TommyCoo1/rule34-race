@@ -1,15 +1,14 @@
 'use client'
 
-import { useGame } from '@/hooks/useGame'
-import type { Post } from '@/types'
+import { useGameContext } from '@/context/GameProvider'
 
-interface Props {
-  initialPost: Post
-}
+export default function ImageGame() {
+  const { state, loading, error, selectTag } = useGameContext()
 
-export default function ImageGame({ initialPost }: Props) {
-  const { post, loading, error, fetchByTag } = useGame(initialPost)
-  const tags = post.tags.split(' ')
+  if (!state) return <p>No game state found.</p>
+
+  const { currentPost, isGameOver, path, goalTag } = state
+  const tags = currentPost.tags.split(' ') // TODO Encountered two children with the same key error, need to fix this
 
   return (
     <div className="max-w-xl mx-auto">
@@ -17,19 +16,26 @@ export default function ImageGame({ initialPost }: Props) {
       {error && <p className="text-red-500">Error: {error}</p>}
       {!loading && !error && (
         <>
-          <img src={post.file_url} alt="Rule34 Post" className="w-full rounded shadow-md" />
-          <section className="mt-5">
-            <h2 className="font-bold">Choose a Tag:</h2>
-            <ul className="flex flex-wrap gap-2 mt-2">
-              {tags.map((tag) => (
-                <li key={tag}>
-                  <button onClick={() => fetchByTag(tag)} className="bg-blue-900 text-white px-3 py-1 rounded">
-                    {tag}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </section>
+          <img src={currentPost.file_url} alt="Rule34 Post" className="w-full rounded shadow-md" />
+          
+          {isGameOver ? (
+            <div className="mt-5 text-green-600 font-bold">
+              🎉 Goal tag <strong>{goalTag}</strong> reached in {path.length} steps!
+            </div>
+          ) : (
+            <section className="mt-5">
+              <h2 className="font-bold">Choose a Tag:</h2>
+              <ul className="flex flex-wrap gap-2 mt-2">
+                {tags.map((tag) => (
+                  <li key={tag}>
+                    <button onClick={() => selectTag(tag)} className="bg-blue-900 text-white px-3 py-1 rounded">
+                      {tag}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </>
       )}
     </div>
