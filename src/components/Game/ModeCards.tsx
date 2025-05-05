@@ -1,6 +1,6 @@
 'use client';
 import { GameMode } from '@/types';
-import { Button } from './button';
+import { Button } from '../UI/button';
 
 export function ModeCard({ mode, onPlay }: { mode: GameMode; onPlay: () => void }) {
   return (

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Flame, Clock, Footprints, Radar } from 'lucide-react';
 import { GameMode } from '@/types';
-import { ModeCard } from '@/components/UI/ModeCards';
+import { ModeCard } from '@/components/Game/ModeCards';
 import { ModeSelectModal } from '@/components/Game/ModeSelectModals';
 
 const modes: GameMode[] = [
