@@ -1,18 +1,50 @@
-import ImageGame from '@/components/Game/ImageGame'
-import type { Post } from '@/types'
 
-export default async function Page() {
-  const START_TAG = 'cat_ears'
-  const apiUrl = `${process.env.NEXT_PUBLIC_RULE34_API}?page=dapi&s=post&q=index&tags=${encodeURIComponent(START_TAG)}&limit=1&json=1`
+'use client';
+import { useState } from 'react';
+import { Flame, Clock, Footprints, Radar } from 'lucide-react';
+import { GameMode } from '@/types';
+import { ModeCard } from '@/components/Game/ModeCards';
+import { ModeSelectModal } from '@/components/Game/ModeSelectModals';
 
-  const res = await fetch(apiUrl, { next: { revalidate: 60 } })
-  if (!res.ok) throw new Error(`External API error: ${res.status}`)
-  const data: Post[] = await res.json()
+const modes: GameMode[] = [
+  {
+    id: 'classic',
+    title: 'Classic',
+    description: 'Navigate from a start to an end tag strategically.',
+    icon: <Flame />
+  },
+  {
+    id: 'time',
+    title: 'Time Trial',
+    description: 'Reach the goal as fast as you can.',
+    icon: <Clock />
+  },
+  {
+    id: 'step',
+    title: 'Step Challenge',
+    description: 'Use the fewest jumps to reach your destination.',
+    icon: <Footprints />
+  },
+  {
+    id: 'hotcold',
+    title: 'Hot/Cold',
+    description: 'Get hints if your tags are getting warmer or colder.',
+    icon: <Radar />
+  }
+];
+
+export default function Home() {
+  const [selectedMode, setSelectedMode] = useState<GameMode | null>(null);
 
   return (
-    <main className="p-5 font-sans">
-      <h1 className="text-2xl font-bold mb-4">Rule34-Race</h1>
-      <ImageGame initialPost={data[0]} />
+    <main className="min-h-screen flex flex-col items-center justify-center gap-8 p-6 bg-muted">
+      <h1 className="text-3xl font-bold text-foreground">Choose your game mode</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {modes.map(mode => (
+          <ModeCard key={mode.id} mode={mode} onPlay={() => setSelectedMode(mode)} />
+        ))}
+      </div>
+      <ModeSelectModal isOpen={!!selectedMode} mode={selectedMode} onClose={() => setSelectedMode(null)} />
     </main>
-  )
+  );
 }

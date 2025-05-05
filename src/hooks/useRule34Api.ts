@@ -1,11 +1,30 @@
-import { Post } from "@/types";
+import { defaultUrl } from "@/app/api/rule34/route";
+import { fetchJson } from "@/lib/apiClient";
+import { Post as Post } from "@/types";
 
-export async function fetchPostByTag(tag: string): Promise<Post> {
-  // const url = `${process.env.NEXT_PUBLIC_RULE34_API}?page=dapi&s=post&q=index&tags=${encodeURIComponent(tag)}&limit=1&json=1`
-  // const res = await fetch(url, { next: { revalidate: 60 } })
-  const res = await fetch(`/api/rule34?tags=${encodeURIComponent(tag)}`);
-  if (!res.ok) throw new Error(`Status ${res.status}`);
-  const data: Post[] = await res.json();
-  if (data.length === 0) throw new Error("No images found");
-  return data[0];
+export async function fetchPostByTagViaProxy(tag: string): Promise<Post> {
+  const data = await fetchJson<Post[]>(`/api/rule34?tags=${encodeURIComponent(tag)}`)
+  if (data.length === 0) {
+    throw new Error('No images found for tag')
+  }
+  return data[0]
+}
+
+export async function fetchRndPostByTagViaProxy(tag: string): Promise<Post | null> {
+  const data = await fetchJson<Post[]>(`/api/rule34?tags=${tag}&limit=2`)// TODO ERROR WHEN ONLY one post is there?
+  if (data.length === 0) {
+    throw new Error('No images found for tag')
+  }
+  const randomIndex = Math.floor(Math.random() * data.length)
+  return data[randomIndex]
+}
+// TODO getNeighbourPosts() kann ähnlich implementiert werden – z.B. alle Tags aktuell Post nehmen --> zufällig einen davon anfragen, Aggregation in deadEndOptions
+
+export async function fetchPostByTagDirectly(tag: string): Promise<Post> {
+  const url = `${defaultUrl}&tags=${encodeURIComponent(tag)}&limit=1`
+  const data = await fetchJson<Post[]>(url)
+  if (data.length === 0) {
+    throw new Error('No images found for tag')
+  }
+  return data[0]
 }

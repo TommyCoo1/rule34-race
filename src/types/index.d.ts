@@ -4,3 +4,14 @@ export interface Post {
     tags: string
   }
   
+  export type GameMode = {
+    id: string;
+    title: string;
+    description: string;
+    icon: JSX.Element;
+  };
+  
+  export type TagPair = {
+    startTag: string;
+    endTag: string;
+  };
