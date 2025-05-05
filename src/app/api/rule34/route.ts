@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   const tags = searchParams.get('tags') ?? ''
   const limit = searchParams.get('limit') ?? '1'
 
-  const externalUrl = `${defaultUrl}&tags=${encodeURIComponent(tags)}&limit=${limit}`
+  const externalUrl = `${defaultUrl}&tags=${encodeURIComponent(`${tags} sort:random`)}${limit ? `&limit=${limit}` : ''}`
 
   try {
     const res = await fetch(externalUrl)

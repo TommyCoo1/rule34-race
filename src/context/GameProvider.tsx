@@ -7,7 +7,7 @@ import {
   goBackOneStep,
   GameState,
 } from "@/lib/gameState";
-import { fetchRndPostByTagViaProxy } from "@/hooks/useRule34Api";
+import { fetchPostByTagViaProxy, fetchRndPostByTagViaProxy } from "@/hooks/useRule34Api";
 import type { Post } from "@/types";
 import { toast } from "sonner";
 
@@ -53,7 +53,7 @@ export function GameProvider({
     async (tag: string) => {
       setLoading(true);
       try {
-        const newPost = await fetchRndPostByTagViaProxy(tag);
+        const newPost = await fetchPostByTagViaProxy(tag);
         if (!newPost) {
           toast.error("Dead end – choose another tag");
           return;

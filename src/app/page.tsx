@@ -24,12 +24,6 @@ const modes: GameMode[] = [
     title: 'Step Challenge',
     description: 'Use the fewest jumps to reach your destination.',
     icon: <Footprints />
-  },
-  {
-    id: 'hotcold',
-    title: 'Hot/Cold',
-    description: 'Get hints if your tags are getting warmer or colder.',
-    icon: <Radar />
   }
 ];
 
