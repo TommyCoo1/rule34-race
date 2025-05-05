@@ -2,6 +2,7 @@
 
 import { useGameContext } from "@/context/GameProvider";
 import { DeadEndModal } from "./DeadEndModal";
+import { useSearchParams } from "next/navigation";
 
 export default function ImageGame() {
   const { state, loading, error, selectTag, pickFallbackPost, closeDeadEnd } =
@@ -9,9 +10,10 @@ export default function ImageGame() {
 
   if (!state) return <p>No game state found.</p>;
 
-  const { currentPost, path, goalTag, history, deadEndOptions } =
-    state;
+  const { currentPost, path, goalTag, history, deadEndOptions } = state;
   const tags = currentPost.tags.split(" "); // TODO Encountered two children with the same key error, need to fix this
+  const params = useSearchParams();
+  const blur = params.get("blur") === "true";
 
   return (
     <div className="max-w-xl mx-auto">
@@ -22,7 +24,9 @@ export default function ImageGame() {
           <img
             src={currentPost.file_url}
             alt="Rule34 Post"
-            className="w-full rounded shadow-md"
+            className={`w-full rounded shadow-md filter ${
+              blur ? "blur-3xl" : ""
+            }`}
           />
 
           {currentPost.tags.includes(goalTag) ? (

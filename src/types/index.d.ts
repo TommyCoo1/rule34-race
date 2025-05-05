@@ -15,3 +15,5 @@ export interface Post {
     startTag: string;
     endTag: string;
   };
+
+  type CheckedState = boolean | "indeterminate";
