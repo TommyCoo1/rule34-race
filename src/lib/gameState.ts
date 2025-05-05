@@ -5,8 +5,9 @@ export interface GameState {
   goalTag: string
   visitedPostIds: Set<number>
   path: string[]
-  steps: number // TODO maybe remove this and use path.length instead
   isGameOver: boolean
+  history: Post[]
+  deadEndOptions: Post[] | null
 }
 
 export function createInitialState(post: Post, goalTag: string): GameState {
@@ -15,19 +16,46 @@ export function createInitialState(post: Post, goalTag: string): GameState {
     goalTag,
     visitedPostIds: new Set([post.id]),
     path: [],
-    steps: 0,
-    isGameOver: false
+    isGameOver: false,
+    history: [post],
+    deadEndOptions: null
   }
 }
 
-export function applyTagSelection(state: GameState, newPost: Post, selectedTag: string): GameState {
+export function applyTagSelection(
+  state: GameState,
+  newPost: Post,
+  selectedTag: string
+): GameState {
+  // Loop-check: Post already seen?
+  if (state.visitedPostIds.has(newPost.id)) {
+    return state
+  }
+
   const hasReachedGoal = newPost.tags.includes(state.goalTag)
+
   return {
     ...state,
     currentPost: newPost,
-    visitedPostIds: state.visitedPostIds.add(newPost.id),
+    visitedPostIds: new Set(state.visitedPostIds).add(newPost.id),
+    history: [...state.history, newPost],
     path: [...state.path, selectedTag],
-    steps: state.steps + 1,
-    isGameOver: hasReachedGoal
+    isGameOver: hasReachedGoal,
+    deadEndOptions: null
+  }
+}
+
+export function goBackOneStep(state: GameState): GameState {
+  if (state.history.length <= 1) return state
+
+  const newHistory = state.history.slice(0, -1)
+  const previousPost = newHistory[newHistory.length - 1]
+
+  return {
+    ...state,
+    currentPost: previousPost,
+    history: newHistory,
+    path: state.path.slice(0, -1),
+    isGameOver: false
   }
 }

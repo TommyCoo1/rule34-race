@@ -1,26 +1,43 @@
-'use client'
+"use client";
 
-import { useGameContext } from '@/context/GameProvider'
+import { ArrowLeft } from "lucide-react";
+import { useGameContext } from "@/context/GameProvider";
+import { DeadEndModal } from "./DeadEndModal";
 
 export default function ImageGame() {
-  const { state, loading, error, selectTag } = useGameContext()
+  const { state, loading, error, selectTag, goBack, pickFallbackPost, closeDeadEnd } =
+    useGameContext();
 
-  if (!state) return <p>No game state found.</p>
+  if (!state) return <p>No game state found.</p>;
 
-  const { currentPost, isGameOver, path, goalTag } = state
-  const tags = currentPost.tags.split(' ') // TODO Encountered two children with the same key error, need to fix this
+  const { currentPost, path, goalTag, history, deadEndOptions } =
+    state;
+  const tags = currentPost.tags.split(" "); // TODO Encountered two children with the same key error, need to fix this
 
   return (
     <div className="max-w-xl mx-auto">
+      {history.length > 1 && (
+        <button
+          onClick={goBack}
+          className="mb-3 flex items-center gap-1 text-sm font-medium hover:bg-muted px-3 py-1 rounded-md"
+        >
+          <ArrowLeft size={16} /> Back
+        </button>
+      )}
       {loading && <p>Loading…</p>}
       {error && <p className="text-red-500">Error: {error}</p>}
       {!loading && !error && (
         <>
-          <img src={currentPost.file_url} alt="Rule34 Post" className="w-full rounded shadow-md" />
-          
-          {isGameOver ? (
+          <img
+            src={currentPost.file_url}
+            alt="Rule34 Post"
+            className="w-full rounded shadow-md"
+          />
+
+          {currentPost.tags.includes(goalTag) ? (
             <div className="mt-5 text-green-600 font-bold">
-              🎉 Goal tag <strong>{goalTag}</strong> reached in {path.length} steps!
+              🎉 Goal tag <strong>{goalTag}</strong> reached in {path.length}{" "}
+              steps!
             </div>
           ) : (
             <section className="mt-5">
@@ -28,7 +45,10 @@ export default function ImageGame() {
               <ul className="flex flex-wrap gap-2 mt-2">
                 {tags.map((tag) => (
                   <li key={tag}>
-                    <button onClick={() => selectTag(tag)} className="bg-blue-900 text-white px-3 py-1 rounded">
+                    <button
+                      onClick={() => selectTag(tag)}
+                      className="bg-blue-900 text-white px-3 py-1 rounded"
+                    >
                       {tag}
                     </button>
                   </li>
@@ -38,6 +58,13 @@ export default function ImageGame() {
           )}
         </>
       )}
+      {deadEndOptions !== null && (
+        <DeadEndModal
+          options={deadEndOptions}
+          onPick={pickFallbackPost}
+          onClose={closeDeadEnd}
+        />
+      )}
     </div>
-  )
+  );
 }
