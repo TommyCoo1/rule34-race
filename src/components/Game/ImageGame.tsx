@@ -4,6 +4,7 @@ import { useGameContext } from "@/context/GameProvider";
 import { DeadEndModal } from "./DeadEndModal";
 import { useSearchParams } from "next/navigation";
 import { VictoryModal } from "./VictoryModal";
+import { TagList } from "./TagList";
 
 export default function ImageGame() {
   const { state, loading, error, selectTag, pickFallbackPost, closeDeadEnd } =
@@ -12,7 +13,7 @@ export default function ImageGame() {
   if (!state) return <p>No game state found.</p>;
 
   const { currentPost, path, goalTag, history, deadEndOptions } = state;
-  const tags = currentPost.tags.split(" "); // TODO Encountered two children with the same key error, need to fix this
+  const tags = currentPost.tags.split(" ");
   const params = useSearchParams();
   const blur = params.get("blur") === "true";
   const hasWon = currentPost.tags.includes(goalTag);
@@ -38,18 +39,7 @@ export default function ImageGame() {
           ) : (
             <section className="mt-5">
               <h2 className="font-bold">Choose a Tag:</h2>
-              <ul className="flex flex-wrap gap-2 mt-2">
-                {tags.map((tag) => (
-                  <li key={tag}>
-                    <button
-                      onClick={() => selectTag(tag)}
-                      className="bg-blue-900 text-white px-3 py-1 rounded"
-                    >
-                      {tag}
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              <TagList tags={tags} onTagSelect={selectTag} maxVisible={12} />
             </section>
           )}
         </>
