@@ -21,7 +21,9 @@
     "node-fetch": "^3.3.2",
     "postcss": "^8.5.3",
     "react": "^19.0.0",
+    "react-confetti": "^6.4.0",
     "react-dom": "^19.0.0",
+    "react-use": "^17.6.0",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.2.0"
   },

@@ -3,6 +3,7 @@
 import { useGameContext } from "@/context/GameProvider";
 import { DeadEndModal } from "./DeadEndModal";
 import { useSearchParams } from "next/navigation";
+import { VictoryModal } from "./VictoryModal";
 
 export default function ImageGame() {
   const { state, loading, error, selectTag, pickFallbackPost, closeDeadEnd } =
@@ -14,6 +15,7 @@ export default function ImageGame() {
   const tags = currentPost.tags.split(" "); // TODO Encountered two children with the same key error, need to fix this
   const params = useSearchParams();
   const blur = params.get("blur") === "true";
+  const hasWon = currentPost.tags.includes(goalTag);
 
   return (
     <div className="max-w-xl mx-auto">
@@ -29,10 +31,9 @@ export default function ImageGame() {
             }`}
           />
 
-          {currentPost.tags.includes(goalTag) ? (
-            <div className="mt-5 text-green-600 font-bold">
-              🎉 Goal tag <strong>{goalTag}</strong> reached in {path.length}{" "}
-              steps!
+          {hasWon ? (
+            <div className="relative">
+              <VictoryModal/>
             </div>
           ) : (
             <section className="mt-5">
