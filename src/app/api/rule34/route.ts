@@ -1,8 +1,8 @@
 // src/app/api/rule34/route.ts
 import { NextResponse } from 'next/server'
 
-// i think this one is needed to use to avoid CORS issues if they arise + to prevent leaking the API key, which is not needed in this case
-export const defaultUrl = `${process.env.NEXT_PUBLIC_RULE34_API}?page=dapi&s=post&q=index&json=1&order=random`
+// export const defaultUrl = `${process.env.NEXT_PUBLIC_RULE34_API}?page=dapi&s=post&q=index&json=1&order=random`
+export const defaultUrl = `https://rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&order=random` // replace this with above if api key is needed
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
