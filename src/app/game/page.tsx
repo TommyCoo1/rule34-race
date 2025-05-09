@@ -21,7 +21,7 @@ export default function GamePage() {
   }, [start]);
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+    <main className="min-h-screen flex flex-col items-center p-6 text-center">
       {post ? (
         <GameProvider initialPost={post} goalTag={end}>
           <GameHeader />

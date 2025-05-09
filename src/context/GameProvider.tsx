@@ -46,7 +46,7 @@ export function GameProvider({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [startTime] = useState(() => Date.now());
-  const [endTime, setEndTime] = useState<number | null>(null);
+  const [endTime, setEndTime] = useState(() => Date.now());
 
 
   const selectTag = useCallback(

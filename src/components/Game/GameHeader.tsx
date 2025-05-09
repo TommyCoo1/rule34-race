@@ -29,12 +29,13 @@ export default function GameHeader() {
   };
 
   return (
-    <header className="w-full max-w-4xl flex justify-between items-center border border-border bg-card p-4 rounded-xl shadow mb-6">
+    <header className="w-full max-w-4xl flex justify-between items-center border border-border bg-card p-4 rounded-xl shadow mb-6 top-4 sticky top-0 z-20">
       <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
         <Button
           variant="ghost"
           onClick={goBack}
           className="flex items-center gap-1"
+          disabled={!state?.path.length}
         >
           <ArrowLeft size={18} /> Back
         </Button>
@@ -59,13 +60,6 @@ export default function GameHeader() {
           Steps: {steps} · <GameTimer />
         </div>
       </div>
-
-      {/* <div className="flex items-center gap-2 text-xs">
-        <Checkbox checked={blurEnabled} onCheckedChange={handleBlurToggle} id="blur"/>
-        <label htmlFor="blur" className="text-sm">
-          Blur images (NSFW‑Filter)
-        </label>
-      </div> */}
 
       <Button
         variant="destructive"
