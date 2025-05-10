@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { VictoryModal } from "./VictoryModal";
 import { TagList } from "./TagList";
 import { Skeleton } from "../UI/skeleton";
+import { ImageGameSkeleton } from "../UI/ImageGameSkeleton";
 
 export default function ImageGame() {
   const { state, loading, error, selectTag, pickFallbackPost, closeDeadEnd } =
@@ -21,7 +22,7 @@ export default function ImageGame() {
 
   return (
     <div className="max-w-xl mx-auto">
-      {loading && <p>Loading…</p>      }
+      {loading && <ImageGameSkeleton />}
       {error && <p className="text-red-500">Error: {error}</p>}
       {!loading && !error && (
         <>

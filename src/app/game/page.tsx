@@ -7,6 +7,7 @@ import { GameProvider } from "@/context/GameProvider";
 import { Post } from "@/types";
 import ImageGame from "@/components/Game/ImageGame";
 import GameHeader from "@/components/Game/GameHeader";
+import { Skeleton } from "@/components/UI/skeleton";
 
 export default function GamePage() {
   const params = useSearchParams();
@@ -28,7 +29,9 @@ export default function GamePage() {
           <ImageGame />
         </GameProvider>
       ) : (
-        <p>Loading...</p>
+        <div className="w-2/5 h-full flex flex-col items-center justify-center">
+          <Skeleton className="w-full h-128 rounded-md animate-pulse bg-gray-400" />
+        </div>
       )}
     </main>
   );
