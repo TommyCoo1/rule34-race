@@ -45,6 +45,8 @@ export function applyTagSelection(
   }
 }
 
+export const GO_BACK = "go-back-step"
+
 export function goBackOneStep(state: GameState): GameState {
   if (state.history.length <= 1) return state
 
@@ -55,7 +57,8 @@ export function goBackOneStep(state: GameState): GameState {
     ...state,
     currentPost: previousPost,
     history: newHistory,
-    path: state.path.slice(0, -1),
+    path: [...state.path, GO_BACK],
     isGameOver: false
   }
 }
+

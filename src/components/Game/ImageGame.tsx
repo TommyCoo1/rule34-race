@@ -5,7 +5,6 @@ import { DeadEndModal } from "./DeadEndModal";
 import { useSearchParams } from "next/navigation";
 import { VictoryModal } from "./VictoryModal";
 import { TagList } from "./TagList";
-import { Skeleton } from "../UI/skeleton";
 import { ImageGameSkeleton } from "../UI/ImageGameSkeleton";
 
 export default function ImageGame() {

@@ -7,7 +7,7 @@ import {
   goBackOneStep,
   GameState,
 } from "@/lib/gameState";
-import { fetchPostByTagViaProxy, fetchRndPostByTagViaProxy } from "@/hooks/useRule34Api";
+import { fetchPostByTagViaProxy} from "@/hooks/useRule34Api";
 import type { Post } from "@/types";
 import { toast } from "sonner";
 

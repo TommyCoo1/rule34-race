@@ -34,8 +34,10 @@ export default function GameHeader() {
         <Button
           variant="ghost"
           onClick={goBack}
-          className="flex items-center gap-1"
-          disabled={!state?.path.length}
+          className="
+          flex items-center gap-1 
+          disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={!state || state.history.length <= 1}
         >
           <ArrowLeft size={18} /> Back
         </Button>
@@ -44,10 +46,7 @@ export default function GameHeader() {
           onCheckedChange={handleBlurToggle}
           id="blur"
         />
-        <label
-          htmlFor="blur"
-          className="text-sm"
-        >
+        <label htmlFor="blur" className="text-sm">
           Blur
         </label>
       </div>
