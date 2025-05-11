@@ -1,28 +1,29 @@
 
 'use client';
 import { useState } from 'react';
-import { Flame, Clock, Footprints, Radar } from 'lucide-react';
+import { Flame, Clock, Footprints, Radar, Dices } from 'lucide-react';
 import { GameMode } from '@/types';
 import { ModeCard } from '@/components/Game/ModeCards';
 import { ModeSelectModal } from '@/components/Game/ModeSelectModals';
+import { Mode } from '@/lib/gameState';
 
 const modes: GameMode[] = [
   {
-    id: 'classic',
+    id: Mode.Classic,
     title: 'Classic',
     description: 'Navigate from a start to an end tag strategically.',
     icon: <Flame />
   },
   {
-    id: 'time',
-    title: 'Time Trial',
-    description: 'Reach the goal as fast as you can.',
-    icon: <Clock />
+    id: Mode.TagGuessr,
+    title: 'Tag Guessr',
+    description: 'Guess tags of different shown posts.',
+    icon: <Dices />
   },
   {
-    id: 'step',
-    title: 'Step Challenge',
-    description: 'Use the fewest jumps to reach your destination.',
+    id: Mode.TagHangmen,
+    title: 'Tag Hangmen',
+    description: 'Guess a random tag of a post without visualization.',
     icon: <Footprints />
   }
 ];

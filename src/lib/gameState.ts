@@ -1,5 +1,11 @@
 import type { Post } from "@/types"
 
+export enum Mode {
+  Classic = 'classic',
+  TagGuessr = 'tag_guesser',
+  TagHangmen = 'tag_hangman',
+}
+
 export interface GameState {
   currentPost: Post
   goalTag: string

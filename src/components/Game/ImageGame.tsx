@@ -16,7 +16,7 @@ export default function ImageGame() {
   const { currentPost, path, goalTag, history, deadEndOptions } = state;
   const tags = currentPost.tags.split(" ");
   const params = useSearchParams();
-  const blur = params.get("blur") === "true";
+  const blur = params.get("blur") === "true";// TODO maybe safe in state, if age restriction is set
   if (currentPost.tags.includes(goalTag)) {
     state.isGameOver = true;// TODO actually set this in the state
     // setState((prev) => (prev ? { ...prev, deadEndOptions: null } : prev));
