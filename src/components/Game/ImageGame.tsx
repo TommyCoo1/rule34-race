@@ -17,7 +17,10 @@ export default function ImageGame() {
   const tags = currentPost.tags.split(" ");
   const params = useSearchParams();
   const blur = params.get("blur") === "true";
-  const hasWon = currentPost.tags.includes(goalTag);
+  if (currentPost.tags.includes(goalTag)) {
+    state.isGameOver = true;// TODO actually set this in the state
+    // setState((prev) => (prev ? { ...prev, deadEndOptions: null } : prev));
+  }
 
   return (
     <div className="max-w-xl mx-auto">
@@ -33,7 +36,7 @@ export default function ImageGame() {
             }`}
           />
 
-          {hasWon ? (
+          {state.isGameOver ? (
             <div className="relative">
               <VictoryModal />
             </div>

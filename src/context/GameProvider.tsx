@@ -16,7 +16,7 @@ interface GameContextType {
   loading: boolean;
   error: string | null;
   startTime: number;
-  endTime: number | null;
+  endTime: number;
   selectTag: (tag: string) => void;
   goBack: () => void;
   pickFallbackPost: (post: Post) => void; // Add this line

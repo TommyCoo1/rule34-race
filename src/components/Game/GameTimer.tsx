@@ -1,28 +1,22 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/context/GameProvider";
-
-function formatDuration(ms: number): string {
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-}
+import { formatDuration } from "@/lib/utils";
 
 export default function GameTimer() {
-  const { startTime, endTime } = useGameContext();
+  const { startTime, endTime, state } = useGameContext();
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
-    if (endTime) return; // Stoppt das Intervall, wenn Spiel vorbei
+    if (state?.isGameOver) return; // stops interval when game is over
     const interval = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(interval);
-  }, [endTime]);
+  }, [state?.isGameOver]);
 
-  const currentTime = endTime ?? now;
+  const currentTime = (state?.isGameOver) ? endTime : now;
   return (
     <span className="text-xs text-muted-foreground">
-      Time: {formatDuration(currentTime - startTime)}
+      Time: {formatDuration(startTime, currentTime)}
     </span>
   );
 }

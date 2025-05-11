@@ -20,7 +20,7 @@ export function VictoryModal() {
   const { path } = state!;
   const router = useRouter();
 
-  const duration = formatDuration(startTime ?? 0, endTime ?? 0);
+  const duration = formatDuration(startTime ?? Date.now(), endTime ?? Date.now());
 
   const shareData = {
     title: "I just won Rule34‑Race!",
