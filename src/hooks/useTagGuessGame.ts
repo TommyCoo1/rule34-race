@@ -7,18 +7,21 @@ export function useTagGuessGame() {
   const defaultTagCount = 3;
   const maxLives = 10;
 
-  const [lives, setLives] = useState(maxLives);
+  const [lives, setLives] = useState(maxLives);// TODO set to a another gamestate
   const [round, setRound] = useState(0);
   const [targetTags, setTargetTags] = useState<string[]>([]);
   const [guessList, setGuessList] = useState<string[]>([]);
   const [post, setPost] = useState<Post | null>(null);
   const [options, setOptions] = useState<string[]>([]);
 
-  const shuffle = <T>(arr: T[]): T[] =>
-    [...arr].sort(() => Math.random() - 0.5);
+  // const shuffle = <T>(arr: T[]): T[] =>
+  //   [...arr].sort(() => Math.random() - 0.5);
 
   const fetchNextPost = async () => {
-    const res = await fetch("/api/rule34?random=1");
+
+    const otherTagsToChoose = popularTags.sort(() => Math.random() - 0.5).slice(0, 300);
+
+    const res = await fetch("/api/rule34?random=1");// TODO move to function
     const dataArray = (await res.json()) as Post[];
     const data = dataArray[0];
 
@@ -31,9 +34,9 @@ export function useTagGuessGame() {
       .slice(0, count);
 
     const sampleSize = Math.min(popularTags.length, 50);
-    const sampledPopular = shuffle(popularTags).slice(0, sampleSize);
+    // const sampledPopular = shuffle(popularTags).slice(0, sampleSize);
 
-    const pool = Array.from(new Set([...available, ...sampledPopular]));
+    const pool = Array.from(new Set([...otherTagsToChoose, ...available]));// change order
 
     setTargetTags(selected);
     setGuessList([]);
