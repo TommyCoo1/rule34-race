@@ -13,11 +13,12 @@ import GameHeader from "./UI/GameHeaderProps";
 import { GameLayout } from "./GameLayout";
 import { Button } from "./UI/button";
 import { Flag } from "lucide-react";
-  const handleSurrender = () => {// TODO refactor from ClassicHeaderContent
-    if (confirm("Are you sure you want to surrender and end this game?")) {
-      // router.push("/");
-    }
-  };
+const handleSurrender = () => {
+  // TODO refactor from ClassicHeaderContent
+  if (confirm("Are you sure you want to surrender and end this game?")) {
+    // router.push("/");
+  }
+};
 
 function useDebounce<T>(value: T, delay = 300): T {
   const [debounced, setDebounced] = useState(value);
@@ -29,15 +30,15 @@ function useDebounce<T>(value: T, delay = 300): T {
 }
 
 export default function TagGuessGame() {
-  const { lives, post, guessList, targetTags, options, onSelectTag, round } =
+  const { lives, post, correctGuesses, wrongGuesses, targetTags, options, onSelectTag, round } =
     useTagGuessGame();
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 300);
 
   // Filter out already guessed tags
   const availableOptions = useMemo(
-    () => options.filter((tag) => !guessList.includes(tag)),
-    [options, guessList]
+    () => options.filter((tag) => !correctGuesses.includes(tag) || !wrongGuesses.includes(tag)),
+    [options, correctGuesses, wrongGuesses]
   );
 
   // Filter based on debounced query
@@ -56,7 +57,6 @@ export default function TagGuessGame() {
       </div>
     );
 
-  // Prepare header slots
   const header = (
     <GameHeader
       left={
@@ -70,9 +70,14 @@ export default function TagGuessGame() {
         </div>
       }
       right={
-        <Button variant="destructive" className="flex items-center gap-1" onClick={handleSurrender}>
+        <Button
+          variant="destructive"
+          className="flex items-center gap-1"
+          onClick={handleSurrender}
+        >
           <Flag size={16} /> Surrender
-        </Button>}
+        </Button>
+      }
     />
   );
 
@@ -85,8 +90,13 @@ export default function TagGuessGame() {
           className="mx-auto my-4 max-h-80 object-contain rounded"
         />
 
-        <Command className="w-full" onValueChange={setQuery} value={query}>
-          <CommandInput placeholder="Guess a tag…" className="w-full" />
+        <Command className="w-full">
+          <CommandInput
+            placeholder="Guess a tag…"
+            className="w-full"
+            value={query}
+            onValueChange={(val: string) => setQuery(val)}
+          />
           {query.length > 0 && (
             <CommandList className="w-full max-h-60 overflow-auto shadow-md bg-card rounded-lg">
               <CommandEmpty>No tags found.</CommandEmpty>
@@ -97,9 +107,11 @@ export default function TagGuessGame() {
                     value={tag}
                     onSelect={() => {
                       onSelectTag(tag);
-                      setQuery("");
+                      // setQuery("");
                     }}
-                    disabled={guessList.includes(tag)}
+                    disabled={
+                      correctGuesses.includes(tag) || wrongGuesses.includes(tag)
+                    }
                   >
                     {tag}
                   </CommandItem>
@@ -110,7 +122,8 @@ export default function TagGuessGame() {
         </Command>
 
         <div className="mt-4 text-sm text-muted-foreground">
-          Guessed ({guessList.length}/{targetTags.length}): {guessList.join(", ")}
+          Guessed ({correctGuesses.length}/{targetTags.length}):{" "}
+          {correctGuesses.join(", ")}
         </div>
       </div>
     </GameLayout>
