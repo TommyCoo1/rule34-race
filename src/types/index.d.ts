@@ -16,4 +16,10 @@ export interface Post {
     endTag: string;
   };
 
+  interface HeaderSlots {
+    left: React.ReactNode;
+    center: React.ReactNode;
+    right: React.ReactNode;
+  }
+
   type CheckedState = boolean | "indeterminate";

@@ -1,38 +1,45 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { fetchPostByTagViaProxy } from "@/hooks/useRule34Api";
+import { useEffect, useState, useMemo } from "react";
 import { GameProvider } from "@/context/GameProvider";
-import { Post } from "@/types";
-import ImageGame from "@/components/Game/ImageGame";
-import GameHeader from "@/components/Game/GameHeader";
+import { fetchPostByTagViaProxy } from "@/hooks/useRule34Api";
 import { Skeleton } from "@/components/UI/skeleton";
+import { Post } from "@/types";
+import { useDefaultHeaderContent } from "./Game/ClassicHeaderContent";
+import { GameLayout } from "./GameLayout";
+import ImageGame from "./Game/ImageGame";
+import GameHeader from "./UI/GameHeaderProps";
+import { useSearchParams } from "next/navigation";
 
 export default function ClassicGame() {
   const params = useSearchParams();
   const start = params.get("start") || "cat_ears";
   const end = params.get("end") || "tentacles"; // Fallback Zieltag
-  const mode = params.get("mode") || "classic";
-
   const [post, setPost] = useState<Post | null>(null);
 
   useEffect(() => {
     fetchPostByTagViaProxy(start).then(setPost);
   }, [start]);
 
+  if (!post) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center">
+        <Skeleton className="my-28 w-4/12 h-96 rounded-md animate-pulse bg-gray-400" />
+      </div>
+    );
+  }
+
   return (
-    <main className="min-h-screen flex flex-col items-center p-6 text-center">
-      {post ? (
-        <GameProvider initialPost={post} goalTag={end}>
-          <GameHeader />
-          <ImageGame />
-        </GameProvider>
-      ) : (
-        <div className="w-2/5 h-full flex flex-col items-center justify-center">
-          <Skeleton className="w-full h-128 rounded-md animate-pulse bg-gray-400" />
-        </div>
-      )}
-    </main>
+    <GameProvider initialPost={post} goalTag={end}>
+      <InnerGame />
+    </GameProvider>
+  );
+}
+
+function InnerGame() {
+  const { left, center, right } = useDefaultHeaderContent();
+
+  return (
+    <GameLayout header={<GameHeader left={left} center={center} right={right} />}>
+      <ImageGame />
+    </GameLayout>
   );
 }
