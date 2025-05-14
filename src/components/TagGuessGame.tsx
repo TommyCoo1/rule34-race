@@ -1,6 +1,5 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
-// import { useTagGuessGame } from '@/hooks/useTagGuessGame";
 import {
   Command,
   CommandInput,
@@ -10,12 +9,21 @@ import {
   CommandItem,
 } from "@/components/UI/command";
 import { useTagGuessGame } from "@/hooks/useTagGuessGame";
+import GameHeader from "./UI/GameHeaderProps";
+import { GameLayout } from "./GameLayout";
+import { Button } from "./UI/button";
+import { Flag } from "lucide-react";
+  const handleSurrender = () => {// TODO refactor from ClassicHeaderContent
+    if (confirm("Are you sure you want to surrender and end this game?")) {
+      // router.push("/");
+    }
+  };
 
 function useDebounce<T>(value: T, delay = 300): T {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
-    const handle = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(handle);
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer);
   }, [value, delay]);
   return debounced;
 }
@@ -32,7 +40,7 @@ export default function TagGuessGame() {
     [options, guessList]
   );
 
-  // Filtered based on debounced query
+  // Filter based on debounced query
   const filtered = useMemo(() => {
     if (!debouncedQuery) return availableOptions;
     return availableOptions.filter((tag) =>
@@ -48,50 +56,63 @@ export default function TagGuessGame() {
       </div>
     );
 
+  // Prepare header slots
+  const header = (
+    <GameHeader
+      left={
+        <>
+          <span className="text-sm font-medium">Round: {round}</span>
+        </>
+      }
+      center={
+        <div className="text-sm" aria-label="Lives">
+          {"❤️".repeat(lives)}
+        </div>
+      }
+      right={
+        <Button variant="destructive" className="flex items-center gap-1" onClick={handleSurrender}>
+          <Flag size={16} /> Surrender
+        </Button>}
+    />
+  );
+
   return (
-    <div className="container mx-auto p-6 bg-white rounded-xl shadow-lg max-w-lg">
-      <div className="flex justify-between items-center mb-4">
-        <div className="text-lg font-medium">Round: {round}</div>
-        <div className="text-lg">{"❤️".repeat(lives)}</div>
+    <GameLayout header={header}>
+      <div className="p-6 bg-card rounded-xl shadow-lg">
+        <img
+          src={post.file_url}
+          alt="Tag Guessing Challenge"
+          className="mx-auto my-4 max-h-80 object-contain rounded"
+        />
+
+        <Command className="w-full" onValueChange={setQuery} value={query}>
+          <CommandInput placeholder="Guess a tag…" className="w-full" />
+          {query.length > 0 && (
+            <CommandList className="w-full max-h-60 overflow-auto shadow-md bg-card rounded-lg">
+              <CommandEmpty>No tags found.</CommandEmpty>
+              <CommandGroup>
+                {filtered.map((tag) => (
+                  <CommandItem
+                    key={tag}
+                    value={tag}
+                    onSelect={() => {
+                      onSelectTag(tag);
+                      setQuery("");
+                    }}
+                    disabled={guessList.includes(tag)}
+                  >
+                    {tag}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          )}
+        </Command>
+
+        <div className="mt-4 text-sm text-muted-foreground">
+          Guessed ({guessList.length}/{targetTags.length}): {guessList.join(", ")}
+        </div>
       </div>
-
-      <img
-        src={post.file_url}
-        alt="Bild zum Erraten von Tags"
-        className="mx-auto my-4 max-h-80 object-contain rounded shadow"
-      />
-
-      <Command
-        className="w-full"
-        onValueChange={setQuery}
-        value={query}
-      >
-        <CommandInput placeholder="Guess a tag…" className="w-full" />
-        {query.length > 0 && (
-          <CommandList className="w-full max-h-60 overflow-auto shadow-md bg-white rounded-lg">
-            <CommandEmpty>No tags found.</CommandEmpty>
-            <CommandGroup>
-              {filtered.map((tag) => (
-                <CommandItem
-                  key={tag}
-                  value={tag}
-                  onSelect={() => {
-                    onSelectTag(tag);
-                    setQuery("");
-                  }}
-                  disabled={guessList.includes(tag)}
-                >
-                  {tag}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        )}
-      </Command>
-
-      <div className="mt-4 text-sm text-gray-700">
-        Guessed ({guessList.length}/{targetTags.length}): {guessList.join(", ")}
-      </div>
-    </div>
+    </GameLayout>
   );
 }
