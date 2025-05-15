@@ -2,6 +2,7 @@ import { Post } from "@/types";
 import { useEffect, useState } from "react";
 
 import popularTags from "../data/popularTags.json";
+import { fetchPostByTagViaProxy } from "./useRule34Api";
 
 export function useTagGuessGame() {
   const defaultTagCount = 3;
@@ -10,21 +11,23 @@ export function useTagGuessGame() {
   const [lives, setLives] = useState(maxLives); // TODO set to a another gamestate
   const [round, setRound] = useState(0);
   const [targetTags, setTargetTags] = useState<string[]>([]);
-  const [guessList, setGuessList] = useState<string[]>([]);
   const [post, setPost] = useState<Post | null>(null);
   const [options, setOptions] = useState<string[]>([]);
   const [correctGuesses, setCorrectGuesses] = useState<string[]>([]);
   const [wrongGuesses, setWrongGuesses] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
 
   const fetchNextPost = async () => {
+    setLoading(true);
+    try {
+
     const otherTagsToChoose = popularTags
       .sort(() => Math.random() - 0.5)
       .slice(0, 300);
 
-    const res = await fetch("/api/rule34?random=1"); // TODO move to function
-    const dataArray = (await res.json()) as Post[];
-    const data = dataArray[0];
+    const res = await fetchPostByTagViaProxy('');
+    const data = await res;
 
     const available = data.tags.split(" ");
     const count = Math.min(defaultTagCount, available.length, 5);
@@ -40,10 +43,18 @@ export function useTagGuessGame() {
     const options = Array.from(new Set([...otherTagsToChoose, ...available])); // change order
 
     setTargetTags(selected);
-    setGuessList([]);
+    setCorrectGuesses([]);
+    setWrongGuesses([]);
     setPost({ id: data.id, file_url: data.file_url, tags: data.tags });
     setOptions(options);
     setRound((r) => r + 1);
+    }
+    catch (error) {
+      console.error("Error fetching post :c ", error);
+      setPost(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -71,5 +82,5 @@ export function useTagGuessGame() {
   };
   
 
-  return { lives, post, correctGuesses, wrongGuesses, targetTags, options, onSelectTag, round };
+  return { lives, post, correctGuesses, wrongGuesses, targetTags, options, onSelectTag, round , loading};
 }

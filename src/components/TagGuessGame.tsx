@@ -13,6 +13,7 @@ import GameHeader from "./UI/GameHeaderProps";
 import { GameLayout } from "./GameLayout";
 import { Button } from "./UI/button";
 import { Flag } from "lucide-react";
+import { ImageGameSkeleton } from "./UI/ImageGameSkeleton";
 const handleSurrender = () => {
   // TODO refactor from ClassicHeaderContent
   if (confirm("Are you sure you want to surrender and end this game?")) {
@@ -30,14 +31,26 @@ function useDebounce<T>(value: T, delay = 300): T {
 }
 
 export default function TagGuessGame() {
-  const { lives, post, correctGuesses, wrongGuesses, targetTags, options, onSelectTag, round } =
-    useTagGuessGame();
+  const {
+    lives,
+    post,
+    correctGuesses,
+    wrongGuesses,
+    targetTags,
+    options,
+    onSelectTag,
+    round,
+    loading,
+  } = useTagGuessGame();
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 300);
 
   // Filter out already guessed tags
   const availableOptions = useMemo(
-    () => options.filter((tag) => !correctGuesses.includes(tag) || !wrongGuesses.includes(tag)),
+    () =>
+      options.filter(
+        (tag) => !correctGuesses.includes(tag) || !wrongGuesses.includes(tag)
+      ),
     [options, correctGuesses, wrongGuesses]
   );
 
@@ -49,7 +62,15 @@ export default function TagGuessGame() {
     );
   }, [availableOptions, debouncedQuery]);
 
-  if (!post) return <div>Loading…</div>;
+  if (!post)
+    return (
+      <div className="min-h-screen flex flex-col items-center p-6 bg-background text-foreground">
+        <div className="max-w-xl w-full">
+          <ImageGameSkeleton />
+        </div>
+      </div>
+    );
+    
   if (lives <= 0)
     return (
       <div className="text-center mt-10 text-xl font-semibold">
@@ -65,8 +86,8 @@ export default function TagGuessGame() {
         </>
       }
       center={
-        <div className="text-sm" aria-label="Lives">
-          {"❤️".repeat(lives)}
+        <div className=" text-muted-foreground" aria-label="Lives">
+          Life: {"❤️".repeat(lives)}
         </div>
       }
       right={
@@ -83,49 +104,53 @@ export default function TagGuessGame() {
 
   return (
     <GameLayout header={header}>
-      <div className="p-6 bg-card rounded-xl shadow-lg">
-        <img
-          src={post.file_url}
-          alt="Tag Guessing Challenge"
-          className="mx-auto my-4 max-h-80 object-contain rounded"
-        />
-
-        <Command className="w-full">
-          <CommandInput
-            placeholder="Guess a tag…"
-            className="w-full"
-            value={query}
-            onValueChange={(val: string) => setQuery(val)}
+      {loading && <ImageGameSkeleton />}
+      {!loading && (
+        <div className="p-6 bg-card rounded-xl shadow-lg">
+          <img
+            src={post.file_url}
+            alt="Tag Guessing Challenge"
+            className="mx-auto my-4 max-h-144 object-contain rounded"
           />
-          {query.length > 0 && (
-            <CommandList className="w-full max-h-60 overflow-auto shadow-md bg-card rounded-lg">
-              <CommandEmpty>No tags found.</CommandEmpty>
-              <CommandGroup>
-                {filtered.map((tag) => (
-                  <CommandItem
-                    key={tag}
-                    value={tag}
-                    onSelect={() => {
-                      onSelectTag(tag);
-                      // setQuery("");
-                    }}
-                    disabled={
-                      correctGuesses.includes(tag) || wrongGuesses.includes(tag)
-                    }
-                  >
-                    {tag}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          )}
-        </Command>
 
-        <div className="mt-4 text-sm text-muted-foreground">
-          Guessed ({correctGuesses.length}/{targetTags.length}):{" "}
-          {correctGuesses.join(", ")}
+          <Command className="w-full">
+            <CommandInput
+              placeholder="Guess a tag…"
+              className="w-full"
+              value={query}
+              onValueChange={(val: string) => setQuery(val)}
+            />
+            {query.length > 0 && (
+              <CommandList className="w-full max-h-60 overflow-auto shadow-md bg-card rounded-lg">
+                <CommandEmpty>No tags found.</CommandEmpty>
+                <CommandGroup>
+                  {filtered.map((tag) => (
+                    <CommandItem
+                      key={tag}
+                      value={tag}
+                      onSelect={() => {
+                        onSelectTag(tag);
+                        // setQuery("");
+                      }}
+                      disabled={
+                        correctGuesses.includes(tag) ||
+                        wrongGuesses.includes(tag)
+                      }
+                    >
+                      {tag}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            )}
+          </Command>
+
+          <div className="mt-4 text-sm text-muted-foreground">
+            Guessed ({correctGuesses.length}/{targetTags.length}):{" "}
+            {correctGuesses.join(", ")}
+          </div>
         </div>
-      </div>
+      )}
     </GameLayout>
   );
 }
