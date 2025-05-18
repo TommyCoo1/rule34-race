@@ -19,13 +19,14 @@ const modes: GameMode[] = [
     title: "Tag Guessr",
     description: "Guess tags of different shown posts.",
     icon: <Dices />,
-  },
-  {
-    id: Mode.TagHangmen,
-    title: "Tag Hangmen",
-    description: "Guess a random tag of a post without visualization.",
-    icon: <Footprints />,
-  },
+  }
+  // ,
+  // {
+  //   id: Mode.TagHangmen,
+  //   title: "Tag Hangmen",
+  //   description: "Guess a random tag of a post without visualization.",
+  //   icon: <Footprints />,
+  // },
 ];
 
 export default function Home() {
@@ -45,7 +46,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold text-foreground">
         Choose your game mode
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
         {modes.map((mode) => (
           <ModeCard key={mode.id} mode={mode} onPlay={() => handlePlay(mode)} />
         ))}

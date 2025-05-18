@@ -38,6 +38,7 @@ export default function TagGuessGame() {
     onSelectTag,
     round,
     loading,
+    countCorrectGuesses,
   } = useTagGuessGame();
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 300);
@@ -120,10 +121,15 @@ export default function TagGuessGame() {
 
   if (lives <= 0)
     return (
+      // rounds: number;
+      // correctCounter: number;       // total correct across all rounds
+      // correctThisRound: number;
+      // totalThisRound: number;
       <TagGuessEndModal
         rounds={round}
-        correct={correctGuesses.length}
-        total={targetTags.length}
+        correctCounter={countCorrectGuesses}
+        correctThisRound={correctGuesses.length}
+        totalThisRound={targetTags.length}
       />
     );
 

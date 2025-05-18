@@ -16,6 +16,7 @@ export function useTagGuessGame() {
   const [correctGuesses, setCorrectGuesses] = useState<string[]>([]);
   const [wrongGuesses, setWrongGuesses] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [countCorrectGuesses, setCountCorrectGuesses] = useState(0);
 
 
   const fetchNextPost = async () => {
@@ -37,7 +38,7 @@ export function useTagGuessGame() {
       .sort(() => Math.random() - 0.5)
       .slice(0, count);
 
-    const sampleSize = Math.min(popularTags.length, 50);
+    // const sampleSize = Math.min(popularTags.length, 50);
     // const sampledPopular = shuffle(popularTags).slice(0, sampleSize);
 
     const options = Array.from(new Set([...otherTagsToChoose, ...available])); // change order
@@ -47,12 +48,12 @@ export function useTagGuessGame() {
     setWrongGuesses([]);
     setPost({ id: data.id, file_url: data.file_url, tags: data.tags });
     setOptions(options);
-    setRound((r) => r + 1);
     }
     catch (error) {
       console.error("Error fetching post :c ", error);
       setPost(null);
     } finally {
+      setRound((r) => r + 1);
       setLoading(false);
     }
   };
@@ -70,6 +71,7 @@ export function useTagGuessGame() {
   
     if (post.tags.includes(tag)) {
       setCorrectGuesses(prev => [...prev, tag]);
+      setCountCorrectGuesses(prev => prev + 1);
       if (correctGuesses.length + 1 === targetTags.length) {
         setCorrectGuesses([]);
         setWrongGuesses([]);
@@ -82,5 +84,5 @@ export function useTagGuessGame() {
   };
   
 
-  return { lives, post, correctGuesses, wrongGuesses, targetTags, options, onSelectTag, round , loading};
+  return { lives, post, correctGuesses, wrongGuesses, targetTags, options, onSelectTag, round , loading, countCorrectGuesses};
 }
