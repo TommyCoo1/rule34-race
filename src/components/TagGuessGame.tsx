@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useState, useMemo, useEffect } from "react";
 import {
   Command,
@@ -14,8 +14,9 @@ import { GameLayout } from "./GameLayout";
 import { Button } from "./UI/button";
 import { Flag } from "lucide-react";
 import { ImageGameSkeleton } from "./UI/ImageGameSkeleton";
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from "next/navigation";
 import { Checkbox } from "./UI/checkbox";
+import { TagGuessEndModal } from "./Game/TagGuessEndModal";
 
 function useDebounce<T>(value: T, delay = 300): T {
   const [debounced, setDebounced] = useState(value);
@@ -42,7 +43,7 @@ export default function TagGuessGame() {
   const debouncedQuery = useDebounce(query, 300);
   const params = useSearchParams();
   const router = useRouter();
-  const blurEnabled = params.get('blur') === 'true';
+  const blurEnabled = params.get("blur") === "true";
 
   // Filter out already guessed tags
   const availableOptions = useMemo(
@@ -61,33 +62,33 @@ export default function TagGuessGame() {
     );
   }, [availableOptions, debouncedQuery]);
 
-    const handleSurrender = () => {
-      // TODO refactor from ClassicHeaderContent
-      if (confirm("Are you sure you want to surrender and end this game?")) {
-        router.push("/");
-      }
-    };
+  const handleSurrender = () => {
+    // TODO refactor from ClassicHeaderContent
+    if (confirm("Are you sure you want to surrender and end this game?")) {
+      router.push("/");
+    }
+  };
 
-    const handleBlurToggle = () => {
-      const next = new URLSearchParams(params.toString())
-      if (blurEnabled) next.delete('blur')
-      else next.set('blur', 'true')
-  
-      router.replace(`?${next.toString()}`, { scroll: false })
-    };
+  const handleBlurToggle = () => {
+    const next = new URLSearchParams(params.toString());
+    if (blurEnabled) next.delete("blur");
+    else next.set("blur", "true");
+
+    router.replace(`?${next.toString()}`, { scroll: false });
+  };
 
   const header = (
     <GameHeader
       left={
         <>
-        <Checkbox
-          checked={blurEnabled}
-          onCheckedChange={handleBlurToggle}
-          id="blur"
-        />
-        <label htmlFor="blur" className="text-sm">
-          Blur
-        </label>
+          <Checkbox
+            checked={blurEnabled}
+            onCheckedChange={handleBlurToggle}
+            id="blur"
+          />
+          <label htmlFor="blur" className="text-sm">
+            Blur
+          </label>
           <span className="text-sm font-medium">Round: {round}</span>
         </>
       }
@@ -119,9 +120,11 @@ export default function TagGuessGame() {
 
   if (lives <= 0)
     return (
-      <div className="text-center mt-10 text-xl font-semibold">
-        Game Over! You reached round {round}.
-      </div>
+      <TagGuessEndModal
+        rounds={round}
+        correct={correctGuesses.length}
+        total={targetTags.length}
+      />
     );
 
   return (
