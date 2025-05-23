@@ -5,18 +5,35 @@ import ClassicGame from "@/components/ClassicGame";
 import TagGuessGame from "@/components/TagGuessGame";
 import TagHangmenGame from "@/components/TagHangMenGame";
 import { useSearchParams } from "next/navigation";
+import { fetchPostByTagViaProxy } from "@/hooks/useRule34Api";
+import { GameProvider } from "@/context/GameProvider";
+import { Post } from "@/types";
+import ImageGame from "@/components/Game/ImageGame";
+import GameHeader from "@/components/Game/GameHeader";
+import { useEffect, useState } from "react";
 
 export default function GamePage() {
-  const searchParams = useSearchParams();
-  const mode = searchParams.get('mode') as Mode | null
-  switch (mode) {
-    case Mode.Classic:
-      return <ClassicGame />;
-    case Mode.TagGuessr:
-      return <TagGuessGame />;
-    case Mode.TagHangmen:
-      return <TagHangmenGame />;
-    default:
-      return <div>Unknown mode</div>;
-  }
+  const params = useSearchParams();
+  const start = params.get("start") || "cat_ears";
+  const end = params.get("end") || "tentacles"; // Fallback Zieltag
+  const mode = params.get("mode") || "classic";
+
+  const [post, setPost] = useState<Post | null>(null);
+
+  useEffect(() => {
+    fetchPostByTagViaProxy(start).then(setPost);
+  }, [start]);
+
+  return (
+    <main className="min-h-screen flex flex-col items-center p-6 text-center">
+      {post ? (
+        <GameProvider initialPost={post} goalTag={end}>
+          <GameHeader />
+          <ImageGame />
+        </GameProvider>
+      ) : (
+        <p>Loading...</p>
+      )}
+    </main>
+  );
 }
