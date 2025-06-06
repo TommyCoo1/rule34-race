@@ -1,4 +1,4 @@
 
 export default function TagHangmenGame() {
-    return <div>TagHangmenGame</div>;
+    return <div>Coming Soon 🚧</div>;
 }

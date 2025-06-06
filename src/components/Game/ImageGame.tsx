@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { VictoryModal } from "./VictoryModal";
 import { TagList } from "./TagList";
 import { ImageGameSkeleton } from "../UI/ImageGameSkeleton";
+import { BlurImage } from "../UI/BlurImage";
 
 export default function ImageGame() {
   const { state, loading, error, selectTag, pickFallbackPost, closeDeadEnd } =
@@ -28,13 +29,7 @@ export default function ImageGame() {
       {error && <p className="text-red-500">Error: {error}</p>}
       {!loading && !error && (
         <>
-          <img
-            src={currentPost.file_url}
-            alt="Rule34 Post"
-            className={`w-full rounded shadow-md filter ${
-              blur ? "blur-3xl" : ""
-            }`}
-          />
+          <BlurImage post={currentPost} blur={blur} />
 
           {state.isGameOver ? (
             <div className="relative">

@@ -16,6 +16,8 @@ export default function GamePage() {
       return <TagGuessGame />;
     case Mode.TagHangmen:
       return <TagHangmenGame />;
+    case Mode.Daily:
+      return <TagHangmenGame />; // Placeholder for Daily mode, implement as needed
     default:
       return <div>Unknown mode</div>;
   }

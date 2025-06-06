@@ -17,6 +17,7 @@ import { ImageGameSkeleton } from "./UI/ImageGameSkeleton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Checkbox } from "./UI/checkbox";
 import { TagGuessEndModal } from "./Game/TagGuessEndModal";
+import { BlurImage } from "./UI/BlurImage";
 
 function useDebounce<T>(value: T, delay = 300): T {
   const [debounced, setDebounced] = useState(value);
@@ -138,14 +139,7 @@ export default function TagGuessGame() {
       {loading && <ImageGameSkeleton />}
       {!loading && (
         <div className="p-6 bg-card rounded-xl shadow-lg">
-          <img
-            src={post.file_url}
-            alt="Tag Guessing Challenge"
-            className={`mx-auto my-4 max-h-144 object-contain rounded ${
-              blurEnabled ? "blur-3xl" : ""
-            }`}
-          />
-
+          <BlurImage post={post} blur={blurEnabled} />
           <Command className="w-full">
             <CommandInput
               placeholder="Guess a tag…"

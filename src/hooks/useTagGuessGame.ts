@@ -6,7 +6,7 @@ import { fetchPostByTagViaProxy } from "./useRule34Api";
 
 export function useTagGuessGame() {
   const defaultTagCount = 3;
-  const maxLives = 3;
+  const maxLives = 4;
 
   const [lives, setLives] = useState(maxLives); // TODO set to a another gamestate
   const [round, setRound] = useState(0);

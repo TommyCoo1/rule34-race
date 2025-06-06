@@ -20,13 +20,13 @@ const modes: GameMode[] = [
     description: "Guess tags of different shown posts.",
     icon: <Dices />,
   }
-  // ,
-  // {
-  //   id: Mode.TagHangmen,
-  //   title: "Tag Hangmen",
-  //   description: "Guess a random tag of a post without visualization.",
-  //   icon: <Footprints />,
-  // },
+  ,
+  {
+    id: Mode.Daily,
+    title: "Daily Challenge",
+    description: "Solve a daily challenge.",
+    icon: <Footprints />,
+  },
 ];
 
 export default function Home() {
@@ -34,7 +34,7 @@ export default function Home() {
   const router = useRouter();
 
   const handlePlay = (mode: GameMode) => {
-    if (mode.id === Mode.TagGuessr) {
+    if (mode.id === Mode.TagGuessr || mode.id === Mode.Daily) {
       router.push(`/game?mode=${mode.id}`);
     } else {
       setSelectedMode(mode);
