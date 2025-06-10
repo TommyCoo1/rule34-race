@@ -146,6 +146,7 @@ export default function TagGuessGame() {
               className="w-full"
               value={query}
               onValueChange={(val: string) => setQuery(val)}
+              autoFocus // Automatically focuses the input when the component is rendered
             />
             {query.length > 0 && (
               <CommandList className="w-full max-h-60 overflow-auto shadow-md bg-card rounded-lg">
@@ -157,7 +158,7 @@ export default function TagGuessGame() {
                       value={tag}
                       onSelect={() => {
                         onSelectTag(tag);
-                        // setQuery("");
+                        setQuery("");
                       }}
                       disabled={
                         correctGuesses.includes(tag) ||

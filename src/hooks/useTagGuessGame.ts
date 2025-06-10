@@ -53,13 +53,18 @@ export function useTagGuessGame() {
       console.error("Error fetching post :c ", error);
       setPost(null);
     } finally {
+      round;
       setRound((r) => r + 1);
       setLoading(false);
     }
   };
 
+  let isFirstCall = true;
   useEffect(() => {
-    fetchNextPost();
+    if (isFirstCall) {
+      fetchNextPost();
+      isFirstCall = false;
+    }
   }, []);
 
   const onSelectTag = (tag: string) => {
