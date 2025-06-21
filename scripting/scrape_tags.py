@@ -60,11 +60,9 @@ if __name__ == "__main__":
     # pids = [0]
     data, names = scrape_tags(pids)
     
-    # 1. store tag json 
     with open("tags_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    # 2. store tag names json
     with open("tags_names.json", "w", encoding="utf-8") as f:
         json.dump(names, f, ensure_ascii=False, indent=2)
 
